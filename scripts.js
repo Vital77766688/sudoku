@@ -91,7 +91,7 @@ class Sudoku {
 		this.data = data
 		this.body = []
 
-		const values = this.data.split('').map(x => parseInt(x))
+		const values = [...this.data]
 
 		for (let i=0; i<81; i++) {
 			const value = values.shift()
@@ -110,6 +110,14 @@ class Sudoku {
 
 	getSegment(n) {
 		return this.body.filter(cell => cell.segment === n)
+	}
+
+	getCurrentBoard() {
+		const board = []
+		this.body.forEach(item => {
+			board.push(item.value)
+		})
+		return board
 	}
 
 	getHTML() {
@@ -135,9 +143,6 @@ class Sudoku {
 	}
 
 	updateView() {
-		// this.body.map(x => x.element.value = x.value ? x.value : '')
-		// this.body.filter(x => x.fixed).map(x => x.element.classList.add('start'))
-		// this.body.map(x => x.element.classList.remove)
 		for (let item of this.body) {
 			item.element.value = item.value ? item.value : ''
 			if (item.fixed) item.element.classList.add('start')
@@ -156,6 +161,7 @@ class SudoTask {
 		this.side = this.base * 3
 		this.rows = this.getArray()
 		this.columns = this.getArray()
+		this.board = this.getBoard()
 	}
 
 	pattern(r, c) {
@@ -193,17 +199,29 @@ class SudoTask {
 				board.push(nums[this.pattern(r, c)])
 			}
 		}
+		return board
+	}
+
+	getChallengeBoard() {
+		const cells = this.side * this.side
+		const empties = parseInt((cells * 3) / 6) 
+		const board = [...this.board]
 		for (let s of this.shuffle([...Array(cells).keys()]).slice(0, empties)) {
 			board[s] = 0
 		}
-		return board.join('')
+		return board
 	}
 
 }
 
 
 const sudoku_task = new SudoTask()
-const sudoku = new Sudoku(sudoku_task.getBoard())
+const sudoku = new Sudoku(sudoku_task.getChallengeBoard())
 const app = document.querySelector("#app")
 
 app.append(sudoku.getHTML())
+
+check_btn = document.querySelector('#check')
+check_btn.addEventListener('click', () => {
+	console.log('TODO')
+})

@@ -85,6 +85,14 @@ html, body {
 	color: #8a8a8a;
 }
 
+@media (max-width: 510px) {
+	.item {
+		width: 30px;
+		height: 30px;
+		font-size: 18px;
+	}
+}
+
 .item:nth-child(3),
 .item:nth-child(6),
 .item:nth-child(9) {
