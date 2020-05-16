@@ -155,68 +155,17 @@ class Sudoku {
 }
 
 
-class SudoTask {
-	constructor() {
-		this.base = 3
-		this.side = this.base * 3
-		this.rows = this.getArray()
-		this.columns = this.getArray()
-		this.board = this.getBoard()
-	}
+board = [5,7,6,8,9,1,4,2,3,
+	     8,1,9,2,3,4,7,5,6,
+         2,4,3,5,6,7,1,8,9,
+         1,3,2,4,5,6,9,7,8,
+         7,9,8,1,2,3,6,4,5,
+         4,6,5,7,8,9,3,1,2,
+         3,5,4,6,7,8,2,9,1,
+         6,8,7,9,1,2,5,3,4,
+         9,2,1,3,4,5,8,6,7]
 
-	pattern(r, c) {
-		return (this.base * (r % this.base) + parseInt(r / this.base) + c) % this.side
-	}
-
-	shuffle(s) {
-	    let j, x, i;
-	    for (i = s.length - 1; i > 0; i--) {
-	        j = Math.floor(Math.random() * (i + 1))
-	        x = s[i]
-	        s[i] = s[j]
-	        s[j] = x
-	    }
-	    return s
-	}
-
-	getArray() {
-		const arr = []
-		for (let i of this.shuffle([...Array(this.base).keys()])) {
-			for (let j of this.shuffle([...Array(this.base).keys()])) {
-				arr.push(j * this.base + i)
-			}
-		}
-		return arr
-	}
-
-	getBoard() {
-		const board = []
-		const cells = this.side * this.side
-		const empties = parseInt((cells * 3) / 5) 
-		const nums = [...Array(this.base*this.base).keys()].map(x=>x+1)
-		for (let c of this.columns) {
-			for (let r of this.rows) {
-				board.push(nums[this.pattern(r, c)])
-			}
-		}
-		return board
-	}
-
-	getChallengeBoard() {
-		const cells = this.side * this.side
-		const empties = parseInt((cells * 3) / 6) 
-		const board = [...this.board]
-		for (let s of this.shuffle([...Array(cells).keys()]).slice(0, empties)) {
-			board[s] = 0
-		}
-		return board
-	}
-
-}
-
-
-const sudoku_task = new SudoTask()
-const sudoku = new Sudoku(sudoku_task.getChallengeBoard())
+const sudoku = new Sudoku(board)
 const app = document.querySelector("#app")
 
 app.append(sudoku.getHTML())
