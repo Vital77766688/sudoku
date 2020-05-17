@@ -110,9 +110,10 @@ html, body {
 }
 
 .selected {
-	background-color: #eeeeee;
+	background-color: #dddddd;
+	color: #ff2200;
 }
 
 .supported {
-	background-color: #dddddd;
+	background-color: #eeeeee;
 }

@@ -67,7 +67,7 @@ class Item {
 		this.id = id
 		this.x = id % 9
 		this.y = parseInt(id / 9)
-		this.segment = parseInt(this.y / 3) * 3 +parseInt(this.x / 3)
+		this.segment = parseInt(this.y / 3) * 3 + parseInt(this.x / 3)
 		this.value = value
 		this.fixed = this.value ? true : false
 		this.selected = false
@@ -155,22 +155,90 @@ class Sudoku {
 }
 
 
-board = [5,7,6,8,9,1,4,2,3,
-	     8,1,9,2,3,4,7,5,6,
-         2,4,3,5,6,7,1,8,9,
-         1,3,2,4,5,6,9,7,8,
-         7,9,8,1,2,3,6,4,5,
-         4,6,5,7,8,9,3,1,2,
-         3,5,4,6,7,8,2,9,1,
-         6,8,7,9,1,2,5,3,4,
-         9,2,1,3,4,5,8,6,7]
+board0 = [4,2,7,1,9,6,5,3,8,
+	      3,5,9,8,2,4,1,7,6,
+          1,6,8,3,5,7,2,9,4,
+          9,4,2,5,8,1,7,6,3,
+          6,8,3,9,7,2,4,5,1,
+          5,7,1,6,4,3,9,8,2,
+          8,1,5,4,3,9,6,2,7,
+          7,3,6,2,1,5,8,4,9,
+          2,9,4,7,6,8,3,1,5]
+
+
+board = [4,0,0,0,9,6,0,0,8,
+         0,5,9,0,2,4,0,0,6,
+         0,6,0,3,0,0,0,9,4,
+         0,0,2,0,0,0,0,6,0,
+         6,8,0,0,0,0,4,5,1,
+         0,7,0,0,0,0,0,8,0,
+         8,1,5,4,0,0,6,2,7,
+         7,0,0,0,0,0,8,0,0,
+         2,0,0,0,6,8,0,1,5]
+
+
+const sudoku_init = new Sudoku(board0)
 
 const sudoku = new Sudoku(board)
 const app = document.querySelector("#app")
 
+
+//app.append(sudoku_init.getHTML())
 app.append(sudoku.getHTML())
+
+
+
+board0_0 = [...board]
+
+function findEmpty(board) {
+	return board.indexOf(0)
+}
+
+
+function validNumber(board, num, pos) {
+	const sudoku = new Sudoku(board)
+	const item = sudoku.body.filter(x => x.id === pos)[0]
+	if (sudoku.getRow(item.y).filter(x => x.value === num)[0]) return false
+	if (sudoku.getColumn(item.x).filter(x => x.value === num)[0]) return false
+	if (sudoku.getSegment(item.segment).filter(x => x.value === num)[0]) return false
+	return true
+}
+
+function solve(board) {
+	const empty = findEmpty(board)
+	if (empty === -1) return true
+
+	for (let i=1; i<10; i++) {
+		if (validNumber(board, i, empty)) {
+			board[empty] = i
+			if (solve(board)) return true
+			board[empty] = 0
+		}
+	}
+
+	return false
+}
+
+
+// solve(board0_0)
+
+// const sudoku_solved = new Sudoku(board0_0)
+// app.append(sudoku_solved.getHTML())
 
 check_btn = document.querySelector('#check')
 check_btn.addEventListener('click', () => {
 	console.log('TODO')
 })
+
+
+
+
+const test02 = [0,8,9,0,4,0,6,0,5,
+				0,7,0,0,0,8,0,4,1,
+				5,6,0,9,0,0,0,0,8,
+				0,0,0,7,0,5,0,9,0,
+				0,9,0,4,0,1,0,5,0,
+				0,3,0,9,0,6,0,1,0,
+				8,0,0,0,0,0,0,0,7,
+				0,2,0,8,0,0,0,6,0,
+				0,0,6,0,7,0,0,8,0]
